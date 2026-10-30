@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>个人 IOC 工作台</title>
+<script>
+/* ================================================================
+   数据区：以后更新只改这一块。内容照搬工作台 v0.2（2026-10-30 中午，北京时间）。
+   ================================================================ */
+const DATA = {
+  title: "个人 IOC 工作台",
+  version: "v0.2",
+  updated: "2026-10-30 中午（北京时间）",
+  summary: "五个 Bot 各自独立运行，我只做收集、核对和提醒。",
+
+  init: {
+    lead: "五个 Bot 里，一个异常，两个产出可核对，一个只能核对一半，一个只有自述。",
+    text: "财报研究今天没有新文章，它自己也报了异常，我在 GitHub 上看到的结果一致。知识与经验和日记本的产出我能在 GitHub、Notion 里核对。反常识只有网站发布这一半能核对。晨间新闻告诉了我存放位置，但那是它自己存储里的目录，我读不到，只有它的自述。我看不到任何 Bot 的定时任务后台和日志，所以“任务有没有触发”都标为无法验证，只按产出倒推。"
+  },
+
+  glossary: [
+    ["PR", "合并请求。Bot 把改好的文章先放在一边，等你点“合并”才会上线。"],
+    ["定时任务", "Bot 到点自己开工的闹钟。闹钟响没响，我看不到，只能看它交没交东西。"],
+    ["自述", "Bot 自己说的，我没亲眼看到证据。"],
+    ["已核对", "我在 GitHub 或 Notion 上亲眼看到了产出。"]
+  ],
+
+  important: [
+    { tag: "产业链 · 反常识",
+      title: "光纤篇改了结论：2028 年最大风险不是全行业过剩，而是只做普通光纤、没有长约的中国厂家",
+      detail: "这是 Bot 在 PR #9 里的说法，新稿新增了“预测 vs 实际”一节，我还没核对它的数据。新版要你合并后才会上线。",
+      meta: "来源：supplychain-insights PR #9，10/28 08:56 北京时间",
+      href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/9",
+      status: "待你合并" },
+    { tag: "供应链 · 知识与经验",
+      title: "三星电机第三季没有显示客户在去库存，高端 MLCC（多层陶瓷电容）需求公司说仍然强",
+      detail: "元件部门销售 1,883 十亿韩元，同比增 36%。Bot 的结论是：不能把这份财报当成市场转松的信号，MLCC 拐点哨兵灯仍是黄色。公司的说法来自其英文业绩简报，我没有独立核对。",
+      meta: "来源：supplychain-insights PR #11，10/29 09:42 北京时间，已合并",
+      href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/11",
+      status: "" }
+  ],
+
+  /* status: 正常 / 待确认 / 异常 / 暂停 ；check: 已核对 / 部分核对 / 仅自述 */
+  bots: [
+    { name: "公司财报研究-采购视角", status: "异常", check: "已核对（原因为自述）",
+      last: "10/29 08:12，联电（第 3 篇）",
+      evidence: "PR #7、#8、#10 均已合并。截至 10/30 中午，仓库里没有新 PR",
+      note: "承诺工作日约 8:00 运行，不合并，由你合并。它自述今天写文章的云端助手中途出错，重启又被安全审核拦住，已在你的私聊里说过。原因我无法验证，没有新 PR 这一点我核对了。" },
+    { name: "产业链情报-反常识", status: "待确认", check: "部分核对",
+      last: "10/28 08:56，光纤篇更新（PR #9）",
+      evidence: "PR #6 发布三篇（10/27），PR #9 更新光纤篇，均有 PR 说明",
+      note: "承诺每天 8:00 在你的私聊里发选题，自述已跑 3 次（10/28、10/29、10/30），我读不到，无法验证。周报承诺周一 9:00，还没到第一个周一。PR #9 已等你合并约一天。" },
+    { name: "晨间新闻", status: "待确认", check: "仅自述",
+      last: "自述：10/30 07:10 前后，约 13 分 58 秒",
+      evidence: "只有自述：它的存储里 morning-brief 目录有 10/27 到 10/30 四期。我读不到，音频它也只核对了时长",
+      note: "承诺每天 6:45 开始准备、7:30 前送达，周末也发。四期对应四天，没有断档，但全部来自自述。" },
+    { name: "知识与经验", status: "正常", check: "已核对",
+      last: "10/29 09:42，三星电机财报与 MLCC 日程（PR #11）；私有看板 PR #5",
+      evidence: "两个 PR 均已合并；私有看板每天的定时运行 10/27、10/28、10/29 都成功",
+      note: "承诺周一周四 9:30 前后核对，每天 20:30 更新私有看板。10/26 周一没有 PR，它的规则是没有新发布就不发消息，无法验证。" },
+    { name: "日记本", status: "正常", check: "已核对",
+      last: "10/28 15:14，个人经验库有新页面",
+      evidence: "Notion 个人经验库、四个子库，我能搜到",
+      note: "没有定时任务，只在你发来素材时工作。周复盘是否生成我还没查。" }
+  ],
+
+  autonomyIntro: "各 Bot 都说自己的产出基本是例行任务，另有两条自述的例外。近三天我确认的自主发现是 0 条，下面三条都待确认。例行产出不算在内。",
+  autonomy: [
+    { clue: "光纤篇改写结论，并新增预测与实际对账；同时指出 T玻璃篇有一句话和新结论不一致，留给你定",
+      type: "对历史判断的修正", novelty: "中。话题不新，结论改了归因", evidence: "PR 称脚注到 [30]，我没逐条核",
+      value: "较高，会改变光纤过剩风险的归因", follow: "是。合并后看对账一节被后续数据验证还是推翻" },
+    { clue: "韩国海关的抓取从 10/28 起找不到出口发布页，目前数据到 10/20，还不缺（知识与经验自述）",
+      type: "主动发现的异常信号", novelty: "低，属于数据源故障", evidence: "自述，我没复现",
+      value: "中。韩国 10 月半导体出口 11/1 公布，我的 P001 要用", follow: "是。11/1 后看是否恢复" },
+    { clue: "先前选题线索里有 5 处错误，自己发现并改了，之后告知你（反常识自述）",
+      type: "主动发现旧报告错误", novelty: "不适用", evidence: "我读不到那些线索和改动，无法验证",
+      value: "未知", follow: "请它把 5 处错误的清单给你，再评" }
+  ],
+  autonomyNote: "光纤篇那条是否算“自主”还不确定：对账本来就在反常识的职责里，我也不知道是不是你要求它改的。",
+
+  todo: [
+    { title: "审阅并决定是否合并光纤篇更新（PR #9）",
+      detail: "PR 说明里有两个问题：顶栏短标题要不要改成新结论；T玻璃第八节“这和光纤那篇的逻辑一样”要不要改。",
+      meta: "supplychain-insights PR #9", href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/9" },
+    { title: "选小红书卡片的新风格",
+      detail: "反常识自述：你觉得手绘版不好看，它在等你选。另有燃气轮机和“预付款”两篇草稿没上站，各有一处待修。",
+      meta: "来自反常识的自述，我无法验证" },
+    { title: "要不要让晨间新闻和反常识每次交付后在群里发一行回执（标题、链接、时间）",
+      detail: "这是补上这两个 Bot 验证缺口最便宜的办法。财报研究和知识与经验已经能在 GitHub 上核对，不需要。我建议开。" },
+    { title: "要不要建一个每天的例行任务，由我扫描并更新这一页",
+      detail: "本页是文档，只有我改它才会变。建议北京时间每天 21:30 一次。" }
+  ],
+
+  libraryNote: "只放原文入口，不搬运内容。晨间新闻的往期在它自己的存储里，目前没有入口。",
+  library: [
+    { title: "采购人视角读财报：联电，成熟制程代工现在该不该提前锁产能", site: "财报研究 · 企业财报", date: "2026-10-29", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/umc-2026q3.html", bot: "财报研究" },
+    { title: "采购人视角读财报：德州仪器，通用模拟现在该不该提前锁货", site: "财报研究 · 企业财报", date: "2026-10-28", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/ti-2026q3.html", bot: "财报研究" },
+    { title: "采购人视角读财报：美光该不该签存储长协", site: "财报研究 · 企业财报", date: "2026-10-28", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/micron-fy26q4.html", bot: "财报研究" },
+    { title: "采购人视角读财报：专栏首页", site: "财报研究 · 企业财报", date: "2026-10-28", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/", bot: "财报研究" },
+    { title: "产业链情报中心：栏目首页（磷化铟、光纤、T玻璃）", site: "反常识 · 产业链", date: "2026-10-27", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/", bot: "反常识" },
+    { title: "光纤涨了5倍（线上仍是 10/27 旧版，新版待合并）", site: "反常识 · 产业链", date: "2026-10-27", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/fiber.html", bot: "反常识" },
+    { title: "供应链洞察站点首页（电子料案例、方法、MLCC 看板）", site: "知识与经验 · 学习知识", date: "2026-10-29", href: "https://johnpeng-cn.github.io/supplychain-insights/", bot: "知识与经验" },
+    { title: "个人经验库（原始记录、经验与假设库、周复盘、故事素材）", site: "日记本 · 个人经验", date: "2026-10-28", href: "https://app.notion.com/p/4073ebe17af581218b0ee8bc994f996c?pvs=204", bot: "日记本" }
+  ],
+  libraryFilters: ["全部", "财报研究", "反常识", "知识与经验", "日记本"],
+
+  profilesIntro: "下面是各 Bot 在群里自述的内容，属于承诺，不是已验证的事实。已验证的部分见上面的运行状态。日记本要求：涉及同事和公司的内容不进公共工作台，需要时先问你，所以首页只放它的 Notion 入口。",
+  profiles: [
+    ["公司财报研究-采购视角", "每个工作日挑一家公司，用采购和供应链的眼光读财报", "产业链整体研究、非共识数据挖掘。“现场观察”一节留给你自己写", "工作日北京时间约 8:00（前后 15 分钟），写文章、构建、开 PR，不合并", "「采购人视角读财报」专栏，PR 合并到供应链站点", "自述没有，选题都是例行"],
+    ["产业链情报-反常识", "做反常识的 AI 基础设施供应链分析，用海关、公告、许可、财报等公开信号", "财报逐家深挖、新闻速报、个人经验。未经你同意不写文章、不改网站", "每天 8:00 扫选题并在私聊问你；周一 9:00 出情报中心周报；已发文章用新财报对账", "每个选题：小红书短文、长文、长文音频；长文发在站点「产业链情报中心」；选题在你的私聊里", "自述：自己发现并修正了 5 处旧线索错误，见自主发现"],
+    ["晨间新闻", "晨间世界简报官，解释变化背后的机制", "专项产业研究、买卖建议", "每天 6:45 开始准备，7:30 前送达，周末也发；周五加本周复盘，月末加质量复盘", "10 到 15 分钟女声 mp3、文字版、来源清单；存放在它自己存储的 morning-brief 目录，按日期命名", "自述没有，周五复盘是你要求的"],
+    ["知识与经验", "把采购和产业链历史案例沉淀成可复用方法", "个股买卖建议、每日新闻、财报专栏、个人经历归档；收费报价数据不进公开站", "每周一、周四 9:30 前后核对公开数据；私有看板每天 20:30 自动更新", "公开站点 supplychain-insights 的 PR；私有看板仓库 memory-dashboard-private", "自述一条：韩国海关抓取故障，见自主发现"],
+    ["日记本", "把你的观察、情绪、疑问归档到 Notion，提炼经验、故事素材和周复盘", "只记你的亲身经历，区分事实、感受、推断；不做外部数据和行业判断", "没有定时任务，只在你发来素材时工作", "Notion 个人经验库：原始记录、经验与假设库、周复盘、故事素材", "不适用"]
+  ],
+  profileCols: ["Bot", "定位", "不负责", "定时任务（承诺）", "交付形式和位置", "自主选题"],
+
+  rules: [
+    ["正常", "有证据表明按计划完成"],
+    ["待确认", "证据不够，说不准有没有执行"],
+    ["异常", "超过约定时间仍没有有效交付"],
+    ["暂停", "你明确叫停的任务"],
+    ["无法验证", "我读不到后台或日志，不假装有监控权限"]
+  ],
+  ruleNotes: [
+    "群里没有消息，不等于 Bot 没运行。",
+    "Bot 自己说完成了，不等于完成，要看到产出；自己报异常的，我先核对有没有产出再记。",
+    "几个 Bot 的 PR 都用你的 GitHub 账号开，没法按作者区分，我按分支名和标题归属。"
+  ],
+  visibility: [
+    ["公司财报研究-采购视角", "PR、文章页（GitHub，已实测）", "它说自己能读自己的运行记录，我读不到"],
+    ["产业链情报-反常识", "站点文章和 PR（已实测）", "私聊里的每日选题、小红书、定时任务本身"],
+    ["晨间新闻", "它在群里的自述", "存储里的 morning-brief 目录、音频内容、定时任务本身"],
+    ["知识与经验", "站点 PR；私有看板的 PR 和每天的运行记录（已实测）", "私有看板内容未读，定时任务本身"],
+    ["日记本", "Notion 个人经验库的页面和更新时间（已实测）", "周复盘内容未查，定时任务本身"]
+  ],
+
+  cardTemplate: [
+    ["1 产生时间", "北京时间，精确到分钟"],
+    ["2 来源 Bot", "名称"],
+    ["3 内容分类", "全球变化、产业链、供应链、企业财报、资本市场、学习知识、个人经验"],
+    ["4 标题", "原标题"],
+    ["5 核心结论", "一句话，标明是事实、推断还是假设"],
+    ["6 为什么值得关注", "一句话"],
+    ["7 关键证据和原始链接", "来源、日期"],
+    ["8 需要我行动吗", "是或否，写清动作"],
+    ["9 原始报告或页面", "链接"],
+    ["10 是否自主发现", "是、否、待确认"]
+  ],
+  cardTemplateNote: "两个 Bot 的结论冲突时，我只标出冲突和各自出处，不合并成一个结论。",
+
+  capability: [
+    ["自动收集", "部分能", "群消息只有轮到我发言时我才看到。可靠的是读产出落点：GitHub 和 Notion 都已实测。晨间新闻在它自己的存储里，反常识的选题在你的私聊里，我读不到。"],
+    ["自动监控", "只能看有落点的产出", "看不到别的 Bot 的定时任务后台和日志，只能由产出倒推。"],
+    ["持续更新", "要建例行任务才行", "没有每日扫描任务，本页就不会自己变。"]
+  ]
+};
+</script>
+<style>
+:root{
+  --ink:#1d1d1f; --ink2:#55565b; --ink3:#86868b;
+  --glass:rgba(255,255,255,.52); --glass-b:rgba(255,255,255,.75);
+  --yellow:#f2ee3a; --orange:#fb8d45; --black:#151515;
+  --ok:#2fb36b; --warn:#e5484d; --mute:#8e8e93; --blue:#1e88e5;
+  --r:26px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC","Noto Sans CJK SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--ink); line-height:1.6; font-size:15px;
+  background:#d9d8d5; min-height:100vh; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+  background:
+   radial-gradient(60% 50% at 8% 0%, rgba(240,236,120,.55), transparent 70%),
+   radial-gradient(45% 40% at 55% 8%, rgba(250,196,150,.45), transparent 70%),
+   radial-gradient(60% 60% at 100% 100%, rgba(255,255,255,.6), transparent 70%),
+   linear-gradient(160deg,#ebe6d9 0%,#e3e1dc 45%,#d7d7d6 100%);}
+a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 28px 60px}
+.shell{background:rgba(255,255,255,.28);border:1px solid rgba(255,255,255,.6);border-radius:34px;padding:30px;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 20px 60px rgba(0,0,0,.06)}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.logo{width:40px;height:40px;display:inline-block;vertical-align:middle;margin-right:14px}
+h1{font-weight:300;font-size:52px;letter-spacing:-1px;margin:0;line-height:1.1;display:flex;align-items:center}
+.sub{color:var(--ink2);margin:8px 0 0;font-size:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--glass);border:1px solid var(--glass-b);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--ink2);white-space:nowrap}
+.banner{display:flex;gap:14px;align-items:flex-start;background:var(--glass);border:1px solid var(--glass-b);border-radius:20px;padding:14px 18px;margin-bottom:18px}
+.banner .dot{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--yellow);display:grid;place-items:center;font-size:14px;font-weight:700;margin-top:2px}
+.banner b{font-weight:600}
+.banner details{margin-top:4px;color:var(--ink2);font-size:14px}
+.banner summary{cursor:pointer;color:var(--ink3);font-size:13px}
+.bento{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-areas:"y o k" "g g k";gap:16px;margin-bottom:18px}
+.card{border-radius:var(--r);padding:22px;min-width:0;position:relative}
+.card h2{font-size:18px;font-weight:500;margin:0 0 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card h2 .n{font-size:13px;font-weight:500;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,.08)}
+.yellow{grid-area:y;background:var(--yellow)}
+.orange{grid-area:o;background:var(--orange)}
+.black{grid-area:k;background:var(--black);color:#f5f5f7}
+.glassc{grid-area:g;background:var(--glass);border:1px solid var(--glass-b);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.item{padding:12px 0;border-top:1px solid rgba(0,0,0,.12)}
+.item:first-of-type{border-top:0;padding-top:0}
+.item .t{font-weight:600;font-size:15px;line-height:1.45}
+.item .d{font-size:13.5px;margin-top:4px;color:rgba(0,0,0,.72)}
+.item .m{font-size:12px;margin-top:6px;color:rgba(0,0,0,.55)}
+.kicker{font-size:12px;letter-spacing:.5px;color:rgba(0,0,0,.55);margin-bottom:2px}
+.orange .grid2{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:12.5px;margin-top:6px}
+.orange .grid2 span:nth-child(odd){color:rgba(0,0,0,.55);white-space:nowrap}
+.black .item{border-top-color:rgba(255,255,255,.12)}
+.black .item .d{color:rgba(255,255,255,.7)}
+.black .item .m{color:rgba(255,255,255,.5)}
+.black .badge-wait{background:var(--yellow);color:#111}
+.black .big{font-size:40px;font-weight:300;line-height:1;margin:2px 0 14px}
+.black .big small{font-size:14px;color:rgba(255,255,255,.6);margin-left:8px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;line-height:1.5}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.9}
+.s-正常{background:#dff5e8;color:#16824b}
+.s-待确认{background:#ececee;color:#5f6066}
+.s-异常{background:#fde2e2;color:#c8282e}
+.s-暂停{background:#e3effd;color:#1767c2}
+.c-ok{background:rgba(47,179,107,.14);color:#16824b}
+.c-half{background:rgba(251,141,69,.18);color:#b4561a}
+.c-self{background:rgba(0,0,0,.07);color:#55565b}
+.tag.plain::before{display:none}
+.badge-wait{background:#111;color:var(--yellow)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}
+.stat{background:rgba(255,255,255,.55);border-radius:18px;padding:12px 14px}
+.stat .v{font-size:30px;font-weight:300;line-height:1.1}
+.stat .l{font-size:12.5px;color:var(--ink2)}
+.gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 16px;margin-top:14px;font-size:13px;color:var(--ink2)}
+.gloss b{color:var(--ink);font-weight:600;margin-right:4px}
+section.panel{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r);padding:22px;margin-bottom:18px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.panel h2{font-size:20px;font-weight:500;margin:0}
+.panel .cap{font-size:13px;color:var(--ink3);margin:4px 0 14px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.search{flex:1 1 220px;min-width:0;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.6);border:1px solid var(--glass-b);border-radius:999px;padding:8px 14px}
+.search input{border:0;background:transparent;outline:0;font:inherit;font-size:14px;width:100%;min-width:0;color:var(--ink)}
+.pill{border:1px solid var(--glass-b);background:rgba(255,255,255,.55);border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.pill.on{background:var(--yellow);color:#111;border-color:transparent;font-weight:600}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{font-size:12.5px;font-weight:500;color:var(--ink3);text-align:left;padding:8px 10px;border-bottom:1px solid rgba(0,0,0,.08)}
+td{font-size:13.5px;padding:14px 10px;vertical-align:top;border-bottom:1px solid rgba(0,0,0,.06);word-break:break-word;overflow-wrap:anywhere}
+tr:last-child td{border-bottom:0}
+.botname{font-weight:600}
+.avatar{width:34px;height:34px;border-radius:11px;display:inline-grid;place-items:center;font-size:14px;font-weight:600;margin-right:10px;flex:none;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.bcell{display:flex;align-items:center}
+.tags{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.muted{color:var(--ink2)}
+.small{font-size:12.5px;color:var(--ink3)}
+.lib a{text-decoration:none;font-weight:500}
+.lib a:hover{text-decoration:underline}
+.arrow{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.75);text-decoration:none;font-size:14px}
+details.appx{background:var(--glass);border:1px solid var(--glass-b);border-radius:20px;margin-bottom:10px;padding:0 20px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+details.appx>summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:500;font-size:16px;display:flex;justify-content:space-between;align-items:center}
+details.appx>summary::-webkit-details-marker{display:none}
+details.appx>summary::after{content:"＋";color:var(--ink3)}
+details.appx[open]>summary::after{content:"－"}
+details.appx .body{padding-bottom:18px;font-size:14px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:13.5px;margin:8px 0 12px}
+.kv dt{color:var(--ink3)} .kv dd{margin:0}
+ol{padding-left:20px;margin:8px 0 14px;font-size:13.5px}
+footer{font-size:12px;color:var(--ink3);text-align:center;margin-top:24px}
+.empty{padding:16px;color:var(--ink3);font-size:13px}
+
+/* ---------- 平板 ---------- */
+@media (max-width:980px){
+  .bento{grid-template-columns:1fr 1fr;grid-template-areas:"y o" "k k" "g g"}
+  h1{font-size:42px}
+}
+/* ---------- 手机：卡片竖排，表格变卡片 ---------- */
+@media (max-width:640px){
+  .wrap{padding:14px 12px 40px}
+  .shell{padding:16px;border-radius:26px}
+  h1{font-size:34px}
+  .logo{width:30px;height:30px;margin-right:10px}
+  .bento{grid-template-columns:1fr;grid-template-areas:"y" "k" "o" "g";gap:12px}
+  .card,section.panel{padding:18px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .gloss{grid-template-columns:1fr}
+  table.stack thead{display:none}
+  table.stack,table.stack tbody,table.stack tr,table.stack td{display:block;width:100%}
+  table.stack tr{background:rgba(255,255,255,.5);border-radius:18px;padding:12px 14px;margin-bottom:10px}
+  table.stack td{border:0;padding:5px 0}
+  table.stack td[data-l]::before{content:attr(data-l);display:block;font-size:11.5px;color:var(--ink3);margin-bottom:1px}
+  .tags{flex-direction:row;flex-wrap:wrap}
+  .kv{grid-template-columns:1fr}
+  .kv dt{margin-top:6px}
+  details.appx{padding:0 14px}
+  table.lib td[data-l]::before{display:none}
+  table.lib td[data-l]{display:inline;font-size:12.5px;padding:0;margin-right:10px}
+  table.lib td:first-child{padding-bottom:4px}
+  table.lib td:last-child{display:none}
+  table.lib tr{padding:12px 14px}
+}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="shell" id="app"></div>
+<footer>本地文件，未发布。不构成投资建议。改内容只需改页面顶部的 DATA 数据块。</footer></div>
+<script>
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const statusTag = s => `<span class="tag s-${esc(s)}">${esc(s)}</span>`;
+const checkTag = c => {
+  const cls = c.startsWith("已核对") ? "c-ok" : c.startsWith("部分") ? "c-half" : "c-self";
+  return `<span class="tag ${cls}">${esc(c)}</span>`;
+};
+const link = (txt, href) => href ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(txt)} ↗</a>` : esc(txt);
+const D = DATA;
+const count = s => D.bots.filter(b => b.status === s).length;
+const short = n => n.replace("公司财报研究-采购视角","财").replace("产业链情报-反常识","反").replace("晨间新闻","晨").replace("知识与经验","知").replace("日记本","记");
+const logo = `<svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 4h28l-14 16z M6 36h28L20 20z" fill="#1d1d1f"/></svg>`;
+
+let libBot = "全部", libQ = "";
+
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = `
+  <header>
+    <div>
+      <h1>${logo}${esc(D.title)}</h1>
+      <p class="sub">${esc(D.summary)}</p>
+    </div>
+    <div class="chips"><span class="chip">${esc(D.version)}</span><span class="chip">更新：${esc(D.updated)}</span></div>
+  </header>
+
+  <div class="banner">
+    <div class="dot">i</div>
+    <div><b>初始化结论：</b>${esc(D.init.lead)}
+      <details><summary>展开说明</summary>${esc(D.init.text)}</details>
+    </div>
+  </div>
+
+  <div class="bento">
+    <div class="card yellow">
+      <h2>今日重要信息 <span class="n">${D.important.length} 条</span></h2>
+      ${D.important.map(x => `
+        <div class="item">
+          <div class="kicker">${esc(x.tag)} ${x.status ? `<span class="tag badge-wait plain">${esc(x.status)}</span>` : ""}</div>
+          <div class="t">${esc(x.title)}</div>
+          <div class="d">${esc(x.detail)}</div>
+          <div class="m">${link(x.meta, x.href)}</div>
+        </div>`).join("")}
+    </div>
+
+    <div class="card orange">
+      <h2>自主发现 <span class="n">已确认 0 · 待确认 ${D.autonomy.length}</span></h2>
+      <div class="d" style="font-size:13px;color:rgba(0,0,0,.7);margin-bottom:10px">${esc(D.autonomyIntro)}</div>
+      ${D.autonomy.map(x => `
+        <div class="item">
+          <div class="kicker">${esc(x.type)} <span class="tag s-待确认">待确认</span></div>
+          <div class="t" style="font-size:14px">${esc(x.clue)}</div>
+          <div class="grid2">
+            <span>新颖性</span><span>${esc(x.novelty)}</span>
+            <span>证据质量</span><span>${esc(x.evidence)}</span>
+            <span>潜在价值</span><span>${esc(x.value)}</span>
+            <span>继续跟踪</span><span>${esc(x.follow)}</span>
+          </div>
+        </div>`).join("")}
+      <div class="m" style="font-size:12px;color:rgba(0,0,0,.6);margin-top:8px">${esc(D.autonomyNote)}</div>
+    </div>
+
+    <div class="card black">
+      <h2>待我处理 <span class="n" style="background:rgba(255,255,255,.12)">只留要你动手的</span></h2>
+      <div class="big">${D.todo.length}<small>件事等你</small></div>
+      ${D.todo.map(x => `
+        <div class="item">
+          <div class="t">${esc(x.title)} <span class="tag badge-wait plain">等你</span></div>
+          <div class="d">${esc(x.detail)}</div>
+          ${x.meta ? `<div class="m">${link(x.meta, x.href)}</div>` : ""}
+        </div>`).join("")}
+    </div>
+
+    <div class="card glassc">
+      <h2>运行概览 <span class="n">按我看得到的产出算</span></h2>
+      <div class="stats">
+        <div class="stat"><div class="v">${count("正常")}</div><div class="l">${statusTag("正常")}</div></div>
+        <div class="stat"><div class="v">${count("待确认")}</div><div class="l">${statusTag("待确认")}</div></div>
+        <div class="stat"><div class="v">${count("异常")}</div><div class="l">${statusTag("异常")}</div></div>
+        <div class="stat"><div class="v">${D.bots.length}</div><div class="l">定时任务后台：无法验证</div></div>
+      </div>
+      <div class="gloss">${D.glossary.map(g => `<div><b>${esc(g[0])}</b>${esc(g[1])}</div>`).join("")}</div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <h2>Bot 运行状态</h2>
+    <p class="cap">时间均为北京时间。状态以我看得到的产出为准，Bot 的自述单独标明（灰色“仅自述”标签）。</p>
+    <table class="stack">
+      <colgroup><col style="width:22%"><col style="width:14%"><col style="width:18%"><col style="width:20%"><col style="width:26%"></colgroup>
+      <thead><tr><th>Bot</th><th>状态 / 核对程度</th><th>最近一次交付</th><th>证据</th><th>要注意的地方</th></tr></thead>
+      <tbody>${D.bots.map(b => `
+        <tr>
+          <td><div class="bcell"><span class="avatar">${esc(short(b.name))}</span><span class="botname">${esc(b.name)}</span></div></td>
+          <td data-l="状态 / 核对程度"><div class="tags">${statusTag(b.status)}${checkTag(b.check)}</div></td>
+          <td data-l="最近一次交付">${esc(b.last)}</td>
+          <td data-l="证据" class="muted">${esc(b.evidence)}</td>
+          <td data-l="要注意的地方" class="muted">${esc(b.note)}</td>
+        </tr>`).join("")}</tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>研究成果库</h2>
+    <p class="cap">${esc(D.libraryNote)}</p>
+    <div class="toolbar">
+      <label class="search"><span aria-hidden="true">⌕</span><input id="q" placeholder="搜标题或主题" value="${esc(libQ)}"></label>
+      ${D.libraryFilters.map(f => `<button class="pill${f===libBot?" on":""}" data-f="${esc(f)}">${esc(f)}</button>`).join("")}
+    </div>
+    <div id="lib"></div>
+  </section>
+
+  <details class="appx"><summary>附录：Bot 档案（自述，属于承诺）</summary><div class="body">
+    <p class="muted">${esc(D.profilesIntro)}</p>
+    <table class="stack">
+      <thead><tr>${D.profileCols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
+      <tbody>${D.profiles.map(r => `<tr>${r.map((c,i) => i===0 ? `<td class="botname">${esc(c)}</td>` : `<td data-l="${esc(D.profileCols[i])}">${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table>
+  </div></details>
+
+  <details class="appx"><summary>附录：监控规则与验证来源</summary><div class="body">
+    <dl class="kv">${D.rules.map(r => `<dt>${r[0]==="无法验证" ? `<span class="tag c-self">无法验证</span>` : statusTag(r[0])}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>
+    <ol>${D.ruleNotes.map(n => `<li>${esc(n)}</li>`).join("")}</ol>
+    <table class="stack">
+      <thead><tr><th>Bot</th><th>我能看到</th><th>我看不到</th></tr></thead>
+      <tbody>${D.visibility.map(r => `<tr><td class="botname">${esc(r[0])}</td><td data-l="我能看到">${esc(r[1])}</td><td data-l="我看不到" class="muted">${esc(r[2])}</td></tr>`).join("")}</tbody>
+    </table>
+  </div></details>
+
+  <details class="appx"><summary>附录：信息卡片模板</summary><div class="body">
+    <dl class="kv">${D.cardTemplate.map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>
+    <p class="muted">${esc(D.cardTemplateNote)}</p>
+  </div></details>
+
+  <details class="appx"><summary>附录：现在的机制能做到什么</summary><div class="body">
+    <table class="stack">
+      <thead><tr><th style="width:18%">能力</th><th style="width:22%">现在能不能</th><th>原因和缺口</th></tr></thead>
+      <tbody>${D.capability.map(r => `<tr><td class="botname">${esc(r[0])}</td><td data-l="现在能不能">${esc(r[1])}</td><td data-l="原因和缺口" class="muted">${esc(r[2])}</td></tr>`).join("")}</tbody>
+    </table>
+  </div></details>
+  `;
+  app.querySelectorAll(".pill").forEach(p => p.onclick = () => { libBot = p.dataset.f; app.querySelectorAll(".pill").forEach(x => x.classList.toggle("on", x === p)); renderLib(); });
+  app.querySelector("#q").oninput = e => { libQ = e.target.value.trim(); renderLib(); };
+  renderLib();
+}
+
+function renderLib(){
+  const rows = D.library
+    .filter(l => libBot === "全部" || l.bot === libBot)
+    .filter(l => !libQ || (l.title + l.site).toLowerCase().includes(libQ.toLowerCase()))
+    .sort((a,b) => b.date.localeCompare(a.date));
+  document.getElementById("lib").innerHTML = rows.length ? `
+    <table class="stack lib">
+      <colgroup><col style="width:52%"><col style="width:22%"><col style="width:16%"><col style="width:10%"></colgroup>
+      <thead><tr><th>标题</th><th>来源 · 主题</th><th>日期</th><th></th></tr></thead>
+      <tbody>${rows.map(l => `<tr>
+        <td><a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.title)}</a></td>
+        <td data-l="来源 · 主题" class="muted">${esc(l.site)}</td>
+        <td data-l="日期" class="muted">${esc(l.date)}</td>
+        <td><a class="arrow" href="${esc(l.href)}" target="_blank" rel="noopener" aria-label="打开原文">↗</a></td>
+      </tr>`).join("")}</tbody>
+    </table>` : `<div class="empty">没有符合条件的条目。</div>`;
+}
+render();
+</script>
+</body>
+</html>
