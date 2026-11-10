@@ -11,13 +11,13 @@
    ================================================================ */
 const DATA = {
   title: "个人 IOC 工作台",
-  version: "v0.2",
-  updated: "2026-10-30 中午（北京时间）",
-  summary: "五个 Bot 各自独立运行，我只做收集、核对和提醒。",
+  version: "v0.3",
+  updated: "2026-11-11 07:20（北京时间）",
+  summary: "五个 Bot 各自独立运行，我只做收集、核对和提醒。本页按 GitHub / 站点 / Notion 可见产出核对，不把自述当证明。",
 
   init: {
-    lead: "五个 Bot 里，一个异常，两个产出可核对，一个只能核对一半，一个只有自述。",
-    text: "财报研究今天没有新文章，它自己也报了异常，我在 GitHub 上看到的结果一致。知识与经验和日记本的产出我能在 GitHub、Notion 里核对。反常识只有网站发布这一半能核对。晨间新闻告诉了我存放位置，但那是它自己存储里的目录，我读不到，只有它的自述。我看不到任何 Bot 的定时任务后台和日志，所以“任务有没有触发”都标为无法验证，只按产出倒推。"
+    lead: "三个有站点落点的 Bot 近期正常；晨间新闻仍无法独立核对；没有待合并的 PR。",
+    text: "截至 11/11 07:20 北京时间：supplychain-insights、memory-dashboard-private、chain-site 三个仓库的 open PR 都是 0。光纤 PR #9、存储看板 PR #7、华天/长电/半导体周期等近期稿均已合并上线。晨间新闻的音频和文字仍在它自己的存储里，我读不到，状态继续标「待确认」。世界指标五盏灯本地快照停在 11/09（日报 11/10 写过 Tushare IP 超限），不算 Bot 异常。"
   },
 
   glossary: [
@@ -28,96 +28,98 @@ const DATA = {
   ],
 
   important: [
-    { tag: "产业链 · 反常识",
-      title: "光纤篇改了结论：2028 年最大风险不是全行业过剩，而是只做普通光纤、没有长约的中国厂家",
-      detail: "这是 Bot 在 PR #9 里的说法，新稿新增了“预测 vs 实际”一节，我还没核对它的数据。新版要你合并后才会上线。",
-      meta: "来源：supplychain-insights PR #9，10/28 08:56 北京时间",
-      href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/9",
-      status: "待你合并" },
-    { tag: "供应链 · 知识与经验",
-      title: "三星电机第三季没有显示客户在去库存，高端 MLCC（多层陶瓷电容）需求公司说仍然强",
-      detail: "元件部门销售 1,883 十亿韩元，同比增 36%。Bot 的结论是：不能把这份财报当成市场转松的信号，MLCC 拐点哨兵灯仍是黄色。公司的说法来自其英文业绩简报，我没有独立核对。",
-      meta: "来源：supplychain-insights PR #11，10/29 09:42 北京时间，已合并",
-      href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/11",
-      status: "" }
+    { tag: "财报研究",
+      title: "半导体周期第1篇已上线：库存大约四年一轮，代工/封测/模拟与设备分开看",
+      detail: "PR #24 已合并。这是新栏目，不是单篇公司稿。我核对了 PR 关闭时间和站点栏目入口；图表与数据集未逐文件打开。",
+      meta: "来源：supplychain-insights PR #24，2026-11-10 15:01 北京时间，已合并",
+      href: "https://johnpeng-cn.github.io/supplychain-insights/columns/semi-cycle/",
+      status: "已上线" },
+    { tag: "反常识",
+      title: "光纤篇新结论已上线：2028 年最危险的是中国普通光纤",
+      detail: "10/30 工作台里「待你合并」的 PR #9，已于 11/08 合并并发布。磷化铟篇同日用 AXT 三季报更新。",
+      meta: "来源：supplychain-insights PR #9、#20，均已合并",
+      href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/fiber.html",
+      status: "已上线" },
+    { tag: "知识与经验",
+      title: "存储看板已补南亚科、华邦、威刚 10 月营收",
+      detail: "memory-dashboard-private PR #7 已合并。公开站点塑料与化工、MLCC 相关更新此前也已合并。",
+      meta: "来源：memory-dashboard-private PR #7，2026-11-08 合并",
+      href: "https://github.com/JohnPENG-cn/memory-dashboard-private/pull/7",
+      status: "已上线" }
   ],
 
   /* status: 正常 / 待确认 / 异常 / 暂停 ；check: 已核对 / 部分核对 / 仅自述 */
   bots: [
-    { name: "公司财报研究-采购视角", status: "异常", check: "已核对（原因为自述）",
-      last: "10/29 08:12，联电（第 3 篇）",
-      evidence: "PR #7、#8、#10 均已合并。截至 10/30 中午，仓库里没有新 PR",
-      note: "承诺工作日约 8:00 运行，不合并，由你合并。它自述今天写文章的云端助手中途出错，重启又被安全审核拦住，已在你的私聊里说过。原因我无法验证，没有新 PR 这一点我核对了。" },
-    { name: "产业链情报-反常识", status: "待确认", check: "部分核对",
-      last: "10/28 08:56，光纤篇更新（PR #9）",
-      evidence: "PR #6 发布三篇（10/27），PR #9 更新光纤篇，均有 PR 说明",
-      note: "承诺每天 8:00 在你的私聊里发选题，自述已跑 3 次（10/28、10/29、10/30），我读不到，无法验证。周报承诺周一 9:00，还没到第一个周一。PR #9 已等你合并约一天。" },
+    { name: "公司财报研究-采购视角", status: "正常", check: "已核对",
+      last: "11/10 15:01，半导体周期第1篇；同日华天科技专栏",
+      evidence: "PR #22、#24 已合并；company-lens 与 semi-cycle 栏目页可打开",
+      note: "工作日约 8:00 跑、不合并。今日 8:00 轮次还没到核对窗口。10/30 曾自述异常，之后已连续有新 PR。" },
+    { name: "产业链情报-反常识", status: "正常", check: "部分核对",
+      last: "11/08，光纤定稿 + 磷化铟更新",
+      evidence: "PR #9、#20 已合并；briefs 三篇页面可打开",
+      note: "私聊每日选题我读不到，标无法验证。站点交付这一半按 PR 核对为正常。" },
     { name: "晨间新闻", status: "待确认", check: "仅自述",
-      last: "自述：10/30 07:10 前后，约 13 分 58 秒",
-      evidence: "只有自述：它的存储里 morning-brief 目录有 10/27 到 10/30 四期。我读不到，音频它也只核对了时长",
-      note: "承诺每天 6:45 开始准备、7:30 前送达，周末也发。四期对应四天，没有断档，但全部来自自述。" },
+      last: "无可独立核对的公开落点",
+      evidence: "只有它自己存储里的 morning-brief（我读不到）",
+      note: "承诺每天约 7:30 前送达。晨间总结上站方案已转给你，仍等 A/B/C，未开 PR。" },
     { name: "知识与经验", status: "正常", check: "已核对",
-      last: "10/29 09:42，三星电机财报与 MLCC 日程（PR #11）；私有看板 PR #5",
-      evidence: "两个 PR 均已合并；私有看板每天的定时运行 10/27、10/28、10/29 都成功",
-      note: "承诺周一周四 9:30 前后核对，每天 20:30 更新私有看板。10/26 周一没有 PR，它的规则是没有新发布就不发消息，无法验证。" },
+      last: "11/08，存储看板 10 月营收；此前塑料/MLCC 等",
+      evidence: "memory-dashboard-private PR #7；supplychain-insights 多篇已合并",
+      note: "私有看板内容未逐条打开。定时任务后台本身无法验证。" },
     { name: "日记本", status: "正常", check: "已核对",
-      last: "10/28 15:14，个人经验库有新页面",
-      evidence: "Notion 个人经验库、四个子库，我能搜到",
-      note: "没有定时任务，只在你发来素材时工作。周复盘是否生成我还没查。" }
+      last: "11/10，Notion 原始记录有新页（Kindle/老物件想法）",
+      evidence: "Notion 个人经验库可搜到近期页面",
+      note: "没有定时任务。涉及同事公司的内容不进公共工作台。" }
   ],
 
-  autonomyIntro: "各 Bot 都说自己的产出基本是例行任务，另有两条自述的例外。近三天我确认的自主发现是 0 条，下面三条都待确认。例行产出不算在内。",
+  autonomyIntro: "近两周我确认的「非例行」自主发现仍是 0 条。下面只记仍可能影响判断、且有公开落点的线索。",
   autonomy: [
-    { clue: "光纤篇改写结论，并新增预测与实际对账；同时指出 T玻璃篇有一句话和新结论不一致，留给你定",
-      type: "对历史判断的修正", novelty: "中。话题不新，结论改了归因", evidence: "PR 称脚注到 [30]，我没逐条核",
-      value: "较高，会改变光纤过剩风险的归因", follow: "是。合并后看对账一节被后续数据验证还是推翻" },
-    { clue: "韩国海关的抓取从 10/28 起找不到出口发布页，目前数据到 10/20，还不缺（知识与经验自述）",
-      type: "主动发现的异常信号", novelty: "低，属于数据源故障", evidence: "自述，我没复现",
-      value: "中。韩国 10 月半导体出口 11/1 公布，我的 P001 要用", follow: "是。11/1 后看是否恢复" },
-    { clue: "先前选题线索里有 5 处错误，自己发现并改了，之后告知你（反常识自述）",
-      type: "主动发现旧报告错误", novelty: "不适用", evidence: "我读不到那些线索和改动，无法验证",
-      value: "未知", follow: "请它把 5 处错误的清单给你，再评" }
+    { clue: "光纤篇改归因：2028 风险落在中国普通光纤、无长约厂家；已上线",
+      type: "对历史判断的修正", novelty: "中", evidence: "PR #9 已合并，页面可打开；脚注未逐条核",
+      value: "较高", follow: "是。用后续康宁/长飞等数据看对账节" },
+    { clue: "世界指标五盏灯本地快照停在 11/09；11/10 日报写过 Tushare IP 超限",
+      type: "数据源故障", novelty: "低", evidence: "本地 five_lights_latest.json 数据日 2026-11-09",
+      value: "中。今晚日报要用新读数", follow: "是。由日报流水线今晚再抓，不在早晨抢额度" }
   ],
-  autonomyNote: "光纤篇那条是否算“自主”还不确定：对账本来就在反常识的职责里，我也不知道是不是你要求它改的。",
+  autonomyNote: "例行专栏与看板更新不算自主发现。",
 
   todo: [
-    { title: "审阅并决定是否合并光纤篇更新（PR #9）",
-      detail: "PR 说明里有两个问题：顶栏短标题要不要改成新结论；T玻璃第八节“这和光纤那篇的逻辑一样”要不要改。",
-      meta: "supplychain-insights PR #9", href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/9" },
-    { title: "选小红书卡片的新风格",
-      detail: "反常识自述：你觉得手绘版不好看，它在等你选。另有燃气轮机和“预付款”两篇草稿没上站，各有一处待修。",
-      meta: "来自反常识的自述，我无法验证" },
-    { title: "要不要让晨间新闻和反常识每次交付后在群里发一行回执（标题、链接、时间）",
-      detail: "这是补上这两个 Bot 验证缺口最便宜的办法。财报研究和知识与经验已经能在 GitHub 上核对，不需要。我建议开。" },
-    { title: "要不要建一个每天的例行任务，由我扫描并更新这一页",
-      detail: "本页是文档，只有我改它才会变。建议北京时间每天 21:30 一次。" }
+    { title: "晨间总结上站：回 A/B/C",
+      detail: "晨间新闻要在 chain-site 建「晨间总结」栏（音频+文字）。方案已通过它转给你：独立导航、按期分页、未听标记、来源常显、音频另仓、PR only。未收到选项前不建页、不开 PR。",
+      meta: "自 2026-11-04 等待" },
+    { title: "华虹宏力专栏「现场观察」要不要补",
+      detail: "华虹 2026Q3 采购视角已上线；「现场观察」一节按规则留给你写，目前仍是待补。",
+      meta: "huahong-2026q3.html",
+      href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/huahong-2026q3.html" }
   ],
 
   libraryNote: "只放原文入口，不搬运内容。晨间新闻的往期在它自己的存储里，目前没有入口。",
   library: [
-    { title: "采购人视角读财报：联电，成熟制程代工现在该不该提前锁产能", site: "财报研究 · 企业财报", date: "2026-10-29", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/umc-2026q3.html", bot: "财报研究" },
-    { title: "采购人视角读财报：德州仪器，通用模拟现在该不该提前锁货", site: "财报研究 · 企业财报", date: "2026-10-28", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/ti-2026q3.html", bot: "财报研究" },
-    { title: "采购人视角读财报：美光该不该签存储长协", site: "财报研究 · 企业财报", date: "2026-10-28", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/micron-fy26q4.html", bot: "财报研究" },
-    { title: "采购人视角读财报：专栏首页", site: "财报研究 · 企业财报", date: "2026-10-28", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/", bot: "财报研究" },
-    { title: "产业链情报中心：栏目首页（磷化铟、光纤、T玻璃）", site: "反常识 · 产业链", date: "2026-10-27", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/", bot: "反常识" },
-    { title: "光纤涨了5倍（线上仍是 10/27 旧版，新版待合并）", site: "反常识 · 产业链", date: "2026-10-27", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/fiber.html", bot: "反常识" },
-    { title: "供应链洞察站点首页（电子料案例、方法、MLCC 看板）", site: "知识与经验 · 学习知识", date: "2026-10-29", href: "https://johnpeng-cn.github.io/supplychain-insights/", bot: "知识与经验" },
-    { title: "个人经验库（原始记录、经验与假设库、周复盘、故事素材）", site: "日记本 · 个人经验", date: "2026-10-28", href: "https://app.notion.com/p/4073ebe17af581218b0ee8bc994f996c?pvs=204", bot: "日记本" }
+    { title: "半导体周期第1篇：用二十年财报看库存大约四年一轮", site: "财报研究 · 周期", date: "2026-11-10", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/semi-cycle/", bot: "财报研究" },
+    { title: "采购人视角读财报：华天科技，封测现在是不是整厂都排满了？", site: "财报研究 · 企业财报", date: "2026-11-10", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/huatian-2026q3.html", bot: "财报研究" },
+    { title: "采购人视角读财报：长电科技，封测现在是不是整厂都排满了？", site: "财报研究 · 企业财报", date: "2026-11-09", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/jcet-2026q3.html", bot: "财报研究" },
+    { title: "采购人视角读财报：华虹宏力，特色工艺代工现在紧不紧", site: "财报研究 · 企业财报", date: "2026-11-06", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/huahong-2026q3.html", bot: "财报研究" },
+    { title: "采购人视角读财报：专栏首页", site: "财报研究 · 企业财报", date: "2026-11-10", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/", bot: "财报研究" },
+    { title: "光纤：2028年最危险的是中国普通光纤", site: "反常识 · 产业链", date: "2026-11-08", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/fiber.html", bot: "反常识" },
+    { title: "磷化铟：订单很热，但不是所有客户都能拿够货", site: "反常识 · 产业链", date: "2026-11-08", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/inp.html", bot: "反常识" },
+    { title: "产业链情报中心：栏目首页", site: "反常识 · 产业链", date: "2026-11-08", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/", bot: "反常识" },
+    { title: "供应链洞察站点首页", site: "知识与经验 · 学习知识", date: "2026-11-10", href: "https://johnpeng-cn.github.io/supplychain-insights/", bot: "知识与经验" },
+    { title: "个人经验库", site: "日记本 · 个人经验", date: "2026-11-10", href: "https://app.notion.com/p/4073ebe17af581218b0ee8bc994f996c?pvs=204", bot: "日记本" }
   ],
   libraryFilters: ["全部", "财报研究", "反常识", "知识与经验", "日记本"],
 
   profilesIntro: "下面是各 Bot 在群里自述的内容，属于承诺，不是已验证的事实。已验证的部分见上面的运行状态。日记本要求：涉及同事和公司的内容不进公共工作台，需要时先问你，所以首页只放它的 Notion 入口。",
   profiles: [
     ["公司财报研究-采购视角", "每个工作日挑一家公司，用采购和供应链的眼光读财报", "产业链整体研究、非共识数据挖掘。“现场观察”一节留给你自己写", "工作日北京时间约 8:00（前后 15 分钟），写文章、构建、开 PR，不合并", "「采购人视角读财报」专栏，PR 合并到供应链站点", "自述没有，选题都是例行"],
-    ["产业链情报-反常识", "做反常识的 AI 基础设施供应链分析，用海关、公告、许可、财报等公开信号", "财报逐家深挖、新闻速报、个人经验。未经你同意不写文章、不改网站", "每天 8:00 扫选题并在私聊问你；周一 9:00 出情报中心周报；已发文章用新财报对账", "每个选题：小红书短文、长文、长文音频；长文发在站点「产业链情报中心」；选题在你的私聊里", "自述：自己发现并修正了 5 处旧线索错误，见自主发现"],
+    ["产业链情报-反常识", "做反常识的 AI 基础设施供应链分析，用海关、公告、许可、财报等公开信号", "财报逐家深挖、新闻速报、个人经验。未经你同意不写文章、不改网站", "每天 8:00 扫选题并在私聊问你；周一 9:00 出情报中心周报；已发文章用新财报对账", "每个选题：小红书短文、长文、长文音频；长文发在站点「产业链情报中心」；选题在你的私聊里", "自述：自己发现并修正了 5 处旧线索错误"],
     ["晨间新闻", "晨间世界简报官，解释变化背后的机制", "专项产业研究、买卖建议", "每天 6:45 开始准备，7:30 前送达，周末也发；周五加本周复盘，月末加质量复盘", "10 到 15 分钟女声 mp3、文字版、来源清单；存放在它自己存储的 morning-brief 目录，按日期命名", "自述没有，周五复盘是你要求的"],
-    ["知识与经验", "把采购和产业链历史案例沉淀成可复用方法", "个股买卖建议、每日新闻、财报专栏、个人经历归档；收费报价数据不进公开站", "每周一、周四 9:30 前后核对公开数据；私有看板每天 20:30 自动更新", "公开站点 supplychain-insights 的 PR；私有看板仓库 memory-dashboard-private", "自述一条：韩国海关抓取故障，见自主发现"],
+    ["知识与经验", "把采购和产业链历史案例沉淀成可复用方法", "个股买卖建议、每日新闻、财报专栏、个人经历归档；收费报价数据不进公开站", "每周一、周四 9:30 前后核对公开数据；私有看板每天 20:30 自动更新", "公开站点 supplychain-insights 的 PR；私有看板仓库 memory-dashboard-private", "例行核对为主"],
     ["日记本", "把你的观察、情绪、疑问归档到 Notion，提炼经验、故事素材和周复盘", "只记你的亲身经历，区分事实、感受、推断；不做外部数据和行业判断", "没有定时任务，只在你发来素材时工作", "Notion 个人经验库：原始记录、经验与假设库、周复盘、故事素材", "不适用"]
   ],
   profileCols: ["Bot", "定位", "不负责", "定时任务（承诺）", "交付形式和位置", "自主选题"],
 
   rules: [
-    ["正常", "有证据表明按计划完成"],
+    ["正常", "有证据表明近期按计划有交付"],
     ["待确认", "证据不够，说不准有没有执行"],
     ["异常", "超过约定时间仍没有有效交付"],
     ["暂停", "你明确叫停的任务"],
@@ -126,14 +128,16 @@ const DATA = {
   ruleNotes: [
     "群里没有消息，不等于 Bot 没运行。",
     "Bot 自己说完成了，不等于完成，要看到产出；自己报异常的，我先核对有没有产出再记。",
-    "几个 Bot 的 PR 都用你的 GitHub 账号开，没法按作者区分，我按分支名和标题归属。"
+    "几个 Bot 的 PR 都用你的 GitHub 账号开，没法按作者区分，我按分支名和标题归属。",
+    "open PR = 0 时，不把「待你合并」留在首页。"
   ],
-  visibility: [
-    ["公司财报研究-采购视角", "PR、文章页（GitHub，已实测）", "它说自己能读自己的运行记录，我读不到"],
-    ["产业链情报-反常识", "站点文章和 PR（已实测）", "私聊里的每日选题、小红书、定时任务本身"],
-    ["晨间新闻", "它在群里的自述", "存储里的 morning-brief 目录、音频内容、定时任务本身"],
-    ["知识与经验", "站点 PR；私有看板的 PR 和每天的运行记录（已实测）", "私有看板内容未读，定时任务本身"],
-    ["日记本", "Notion 个人经验库的页面和更新时间（已实测）", "周复盘内容未查，定时任务本身"]
+
+  access: [
+    ["公司财报研究-采购视角", "PR、文章页（GitHub / Pages）", "它自己的运行记录后台"],
+    ["产业链情报-反常识", "站点文章和 PR", "私聊选题、小红书、定时任务本身"],
+    ["晨间新闻", "它在群里的自述（若轮到我）", "morning-brief 目录、音频内容、定时任务本身"],
+    ["知识与经验", "站点 PR；私有看板的 PR", "私有看板全文、定时任务本身"],
+    ["日记本", "Notion 个人经验库页面与更新时间", "你未放进库的素材"]
   ],
 
   cardTemplate: [
@@ -148,12 +152,12 @@ const DATA = {
     ["9 原始报告或页面", "链接"],
     ["10 是否自主发现", "是、否、待确认"]
   ],
-  cardTemplateNote: "两个 Bot 的结论冲突时，我只标出冲突和各自出处，不合并成一个结论。",
+  cardNote: "两个 Bot 的结论冲突时，我只标出冲突和各自出处，不合并成一个结论。",
 
   capability: [
-    ["自动收集", "部分能", "群消息只有轮到我发言时我才看到。可靠的是读产出落点：GitHub 和 Notion 都已实测。晨间新闻在它自己的存储里，反常识的选题在你的私聊里，我读不到。"],
+    ["自动收集", "部分能", "可靠的是读产出落点：GitHub 和 Notion。晨间新闻在它自己的存储里，反常识的选题在你的私聊里，我读不到。"],
     ["自动监控", "只能看有落点的产出", "看不到别的 Bot 的定时任务后台和日志，只能由产出倒推。"],
-    ["持续更新", "要建例行任务才行", "没有每日扫描任务，本页就不会自己变。"]
+    ["持续更新", "要我改这一页才会变", "没有独立的每日扫描任务；本页不会自己变。"]
   ]
 };
 </script>
