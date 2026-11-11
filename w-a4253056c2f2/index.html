@@ -12,12 +12,12 @@
 const DATA = {
   title: "个人 IOC 工作台",
   version: "v0.3",
-  updated: "2026-11-11 07:20（北京时间）",
+  updated: "2026-11-11 17:55（北京时间）",
   summary: "五个 Bot 各自独立运行，我只做收集、核对和提醒。本页按 GitHub / 站点 / Notion 可见产出核对，不把自述当证明。",
 
   init: {
-    lead: "三个有站点落点的 Bot 近期正常；晨间新闻仍无法独立核对；没有待合并的 PR。",
-    text: "截至 11/11 07:20 北京时间：supplychain-insights、memory-dashboard-private、chain-site 三个仓库的 open PR 都是 0。光纤 PR #9、存储看板 PR #7、华天/长电/半导体周期等近期稿均已合并上线。晨间新闻的音频和文字仍在它自己的存储里，我读不到，状态继续标「待确认」。世界指标五盏灯本地快照停在 11/09（日报 11/10 写过 Tushare IP 超限），不算 Bot 异常。"
+    lead: "有 1 个待你合并的 PR：IC 采购信号看板 + MLCC 人工数据；晨间新闻仍无法独立核对。",
+    text: "截至 11/11 17:55 北京时间：supplychain-insights 有 open PR #25（CI 已绿、可合并）。memory-dashboard-private、chain-site 仍是 0。晨间新闻状态继续标「待确认」。世界指标五盏灯本地快照仍停在 11/09；今晚日报流水线再抓。"
   },
 
   glossary: [
@@ -28,6 +28,12 @@ const DATA = {
   ],
 
   important: [
+    { tag: "知识与经验",
+      title: "待你合并：IC 采购信号（模拟/MCU）看板，并更新 MLCC 人工数据",
+      detail: "PR #25 已开、mergeable、CI 绿。三盏灯暂都是黄；亚德诺下一份财报定在 11/24。现场观察仍空着留给你。",
+      meta: "来源：supplychain-insights PR #25，2026-11-11 17:21 北京时间，仍 open",
+      href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/25",
+      status: "待你合并" },
     { tag: "财报研究",
       title: "半导体周期第1篇已上线：库存大约四年一轮，代工/封测/模拟与设备分开看",
       detail: "PR #24 已合并。这是新栏目，不是单篇公司稿。我核对了 PR 关闭时间和站点栏目入口；图表与数据集未逐文件打开。",
@@ -39,12 +45,6 @@ const DATA = {
       detail: "10/30 工作台里「待你合并」的 PR #9，已于 11/08 合并并发布。磷化铟篇同日用 AXT 三季报更新。",
       meta: "来源：supplychain-insights PR #9、#20，均已合并",
       href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/fiber.html",
-      status: "已上线" },
-    { tag: "知识与经验",
-      title: "存储看板已补南亚科、华邦、威刚 10 月营收",
-      detail: "memory-dashboard-private PR #7 已合并。公开站点塑料与化工、MLCC 相关更新此前也已合并。",
-      meta: "来源：memory-dashboard-private PR #7，2026-11-08 合并",
-      href: "https://github.com/JohnPENG-cn/memory-dashboard-private/pull/7",
       status: "已上线" }
   ],
 
@@ -63,8 +63,8 @@ const DATA = {
       evidence: "只有它自己存储里的 morning-brief（我读不到）",
       note: "承诺每天约 7:30 前送达。晨间总结上站方案已转给你，仍等 A/B/C，未开 PR。" },
     { name: "知识与经验", status: "正常", check: "已核对",
-      last: "11/08，存储看板 10 月营收；此前塑料/MLCC 等",
-      evidence: "memory-dashboard-private PR #7；supplychain-insights 多篇已合并",
+      last: "11/11 17:21，IC 看板 PR #25（待合并）+ MLCC 人工数据刷新",
+      evidence: "supplychain-insights PR #25 open、CI 绿；此前 PR #7 等已合并",
       note: "私有看板内容未逐条打开。定时任务后台本身无法验证。" },
     { name: "日记本", status: "正常", check: "已核对",
       last: "11/10，Notion 原始记录有新页（Kindle/老物件想法）",
@@ -84,6 +84,10 @@ const DATA = {
   autonomyNote: "例行专栏与看板更新不算自主发现。",
 
   todo: [
+    { title: "合并 IC/MLCC PR #25",
+      detail: "supplychain-insights PR #25：新 IC 采购信号看板（TI/ADI/Microchip/NXP）+ 太阳诱电订单出货比等到 1.83 等 MLCC 人工数据。CI 已绿。合并后看板会上线。",
+      meta: "2026-11-11 17:21 开出",
+      href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/25" },
     { title: "晨间总结上站：回 A/B/C",
       detail: "晨间新闻要在 chain-site 建「晨间总结」栏（音频+文字）。方案已通过它转给你：独立导航、按期分页、未听标记、来源常显、音频另仓、PR only。未收到选项前不建页、不开 PR。",
       meta: "自 2026-11-04 等待" },
