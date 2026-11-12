@@ -11,13 +11,13 @@
    ================================================================ */
 const DATA = {
   title: "个人 IOC 工作台",
-  version: "v0.3",
-  updated: "2026-11-11 17:55（北京时间）",
+  version: "v0.4",
+  updated: "2026-11-13 07:50（北京时间）",
   summary: "五个 Bot 各自独立运行，我只做收集、核对和提醒。本页按 GitHub / 站点 / Notion 可见产出核对，不把自述当证明。",
 
   init: {
-    lead: "有 1 个待你合并的 PR：IC 采购信号看板 + MLCC 人工数据；晨间新闻仍无法独立核对。",
-    text: "截至 11/11 17:55 北京时间：supplychain-insights 有 open PR #25（CI 已绿、可合并）。memory-dashboard-private、chain-site 仍是 0。晨间新闻状态继续标「待确认」。世界指标五盏灯本地快照仍停在 11/09；今晚日报流水线再抓。"
+    lead: "没有待你合并的 PR。航运看板已按审计改掉油轮灯色。",
+    text: "截至 11/13 07:50 北京时间：supplychain-insights、chain-site、memory-dashboard-private 的 open PR 都是 0。昨日 A 股日报页可打开。晨间新闻仍无法独立核对，标「待确认」。世界指标五盏灯本地快照已到 11/12。"
   },
 
   glossary: [
@@ -29,31 +29,31 @@ const DATA = {
 
   important: [
     { tag: "知识与经验",
-      title: "待你合并：IC 采购信号（模拟/MCU）看板，并更新 MLCC 人工数据",
-      detail: "PR #25 已开、mergeable、CI 绿。三盏灯暂都是黄；亚德诺下一份财报定在 11/24。现场观察仍空着留给你。",
-      meta: "来源：supplychain-insights PR #25，2026-11-11 17:21 北京时间，仍 open",
-      href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/25",
-      status: "待你合并" },
-    { tag: "财报研究",
-      title: "半导体周期第1篇已上线：库存大约四年一轮，代工/封测/模拟与设备分开看",
-      detail: "PR #24 已合并。这是新栏目，不是单篇公司稿。我核对了 PR 关闭时间和站点栏目入口；图表与数据集未逐文件打开。",
-      meta: "来源：supplychain-insights PR #24，2026-11-10 15:01 北京时间，已合并",
-      href: "https://johnpeng-cn.github.io/supplychain-insights/columns/semi-cycle/",
+      title: "航运看板灯色已改：油轮不再标「历史高位」红灯",
+      detail: "审计发现 Frontline 2026Q2 把卖船收益算进了营收。PR #28 已合并上线：油轮中位同比改为 +96.5%，分位 38/43（88.4%），按页面自己的规则不应再标红。",
+      meta: "来源：supplychain-insights PR #28，2026-11-12 15:09 北京时间，已合并；看板页可打开",
+      href: "https://johnpeng-cn.github.io/supplychain-insights/dashboard/shipping/",
       status: "已上线" },
-    { tag: "反常识",
-      title: "光纤篇新结论已上线：2028 年最危险的是中国普通光纤",
-      detail: "10/30 工作台里「待你合并」的 PR #9，已于 11/08 合并并发布。磷化铟篇同日用 AXT 三季报更新。",
-      meta: "来源：supplychain-insights PR #9、#20，均已合并",
-      href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/fiber.html",
+    { tag: "财报研究",
+      title: "被动元件与航运周期两篇已上线",
+      detail: "PR #26 已合并。被动元件谷底大约三年半一轮；航运按油轮、干散货、集装箱分开看。半导体周期第1篇此前已上线。",
+      meta: "来源：supplychain-insights PR #26，2026-11-12 00:14 北京时间，已合并",
+      href: "https://johnpeng-cn.github.io/supplychain-insights/columns/cycle/",
+      status: "已上线" },
+    { tag: "知识与经验",
+      title: "IC 采购信号看板已上线；MLCC 补了国巨/华新科/禾伸堂 10 月营收",
+      detail: "原先待你合并的 PR #25 已于 11/11 合并。随后 PR #27 写入三家 10 月月营收。",
+      meta: "来源：PR #25、#27，均已合并；看板页可打开",
+      href: "https://johnpeng-cn.github.io/supplychain-insights/dashboard/ic/",
       status: "已上线" }
   ],
 
   /* status: 正常 / 待确认 / 异常 / 暂停 ；check: 已核对 / 部分核对 / 仅自述 */
   bots: [
     { name: "公司财报研究-采购视角", status: "正常", check: "已核对",
-      last: "11/10 15:01，半导体周期第1篇；同日华天科技专栏",
-      evidence: "PR #22、#24 已合并；company-lens 与 semi-cycle 栏目页可打开",
-      note: "工作日约 8:00 跑、不合并。今日 8:00 轮次还没到核对窗口。10/30 曾自述异常，之后已连续有新 PR。" },
+      last: "11/12，被动元件 + 航运周期两篇；同日审计修正 PR #28",
+      evidence: "PR #26、#28 已合并；cycle / shipping-cycle / passive-cycle / dashboard/shipping 可打开",
+      note: "工作日约 8:00 跑、不合并。定时任务后台本身无法验证。" },
     { name: "产业链情报-反常识", status: "正常", check: "部分核对",
       last: "11/08，光纤定稿 + 磷化铟更新",
       evidence: "PR #9、#20 已合并；briefs 三篇页面可打开",
@@ -63,52 +63,50 @@ const DATA = {
       evidence: "只有它自己存储里的 morning-brief（我读不到）",
       note: "承诺每天约 7:30 前送达。晨间总结上站方案已转给你，仍等 A/B/C，未开 PR。" },
     { name: "知识与经验", status: "正常", check: "已核对",
-      last: "11/11 17:21，IC 看板 PR #25（待合并）+ MLCC 人工数据刷新",
-      evidence: "supplychain-insights PR #25 open、CI 绿；此前 PR #7 等已合并",
+      last: "11/12，国巨/华新科/禾伸堂 10 月营收；此前 IC 看板已上线",
+      evidence: "PR #25、#27 已合并；dashboard/ic、dashboard/mlcc 可打开",
       note: "私有看板内容未逐条打开。定时任务后台本身无法验证。" },
     { name: "日记本", status: "正常", check: "已核对",
-      last: "11/10，Notion 原始记录有新页（Kindle/老物件想法）",
+      last: "11/09，Notion 原始记录有新页（投资原则 2.0）",
       evidence: "Notion 个人经验库可搜到近期页面",
       note: "没有定时任务。涉及同事公司的内容不进公共工作台。" }
   ],
 
   autonomyIntro: "近两周我确认的「非例行」自主发现仍是 0 条。下面只记仍可能影响判断、且有公开落点的线索。",
   autonomy: [
+    { clue: "航运油轮灯色被审计打回：Frontline 营收含卖船收益，已改正并上线",
+      type: "对已发布数字的修正", novelty: "高", evidence: "审计报告 + PR #28 已合并；看板当前读数 +96.5% / 88.4%",
+      value: "高。灯色规则按页面原文执行", follow: "是。以后航运营收看是否含「其他经营收益」" },
     { clue: "光纤篇改归因：2028 风险落在中国普通光纤、无长约厂家；已上线",
       type: "对历史判断的修正", novelty: "中", evidence: "PR #9 已合并，页面可打开；脚注未逐条核",
-      value: "较高", follow: "是。用后续康宁/长飞等数据看对账节" },
-    { clue: "世界指标五盏灯本地快照停在 11/09；11/10 日报写过 Tushare IP 超限",
-      type: "数据源故障", novelty: "低", evidence: "本地 five_lights_latest.json 数据日 2026-11-09",
-      value: "中。今晚日报要用新读数", follow: "是。由日报流水线今晚再抓，不在早晨抢额度" }
+      value: "较高", follow: "是。用后续康宁/长飞等数据看对账节" }
   ],
   autonomyNote: "例行专栏与看板更新不算自主发现。",
 
   todo: [
-    { title: "合并 IC/MLCC PR #25",
-      detail: "supplychain-insights PR #25：新 IC 采购信号看板（TI/ADI/Microchip/NXP）+ 太阳诱电订单出货比等到 1.83 等 MLCC 人工数据。CI 已绿。合并后看板会上线。",
-      meta: "2026-11-11 17:21 开出",
-      href: "https://github.com/JohnPENG-cn/supplychain-insights/pull/25" },
     { title: "晨间总结上站：回 A/B/C",
       detail: "晨间新闻要在 chain-site 建「晨间总结」栏（音频+文字）。方案已通过它转给你：独立导航、按期分页、未听标记、来源常显、音频另仓、PR only。未收到选项前不建页、不开 PR。",
       meta: "自 2026-11-04 等待" },
     { title: "华虹宏力专栏「现场观察」要不要补",
-      detail: "华虹 2026Q3 采购视角已上线；「现场观察」一节按规则留给你写，目前仍是待补。",
+      detail: "华虹 2026Q3 采购视角已上线；「现场观察」一节按规则留给你写，目前仍是「未知：待 John 补充」。",
       meta: "huahong-2026q3.html",
       href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/huahong-2026q3.html" }
   ],
 
   libraryNote: "只放原文入口，不搬运内容。晨间新闻的往期在它自己的存储里，目前没有入口。",
   library: [
+    { title: "航运：三组各算各的（周期专栏）", site: "财报研究 · 周期", date: "2026-11-12", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/shipping-cycle/twenty-years.html", bot: "财报研究" },
+    { title: "被动元件：谷底大约三年半一轮", site: "财报研究 · 周期", date: "2026-11-12", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/passive-cycle/twenty-years.html", bot: "财报研究" },
+    { title: "航运周期看板", site: "知识与经验 · 看板", date: "2026-11-12", href: "https://johnpeng-cn.github.io/supplychain-insights/dashboard/shipping/", bot: "知识与经验" },
+    { title: "IC 采购信号（模拟/MCU）看板", site: "知识与经验 · 看板", date: "2026-11-11", href: "https://johnpeng-cn.github.io/supplychain-insights/dashboard/ic/", bot: "知识与经验" },
     { title: "半导体周期第1篇：用二十年财报看库存大约四年一轮", site: "财报研究 · 周期", date: "2026-11-10", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/semi-cycle/", bot: "财报研究" },
     { title: "采购人视角读财报：华天科技，封测现在是不是整厂都排满了？", site: "财报研究 · 企业财报", date: "2026-11-10", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/huatian-2026q3.html", bot: "财报研究" },
     { title: "采购人视角读财报：长电科技，封测现在是不是整厂都排满了？", site: "财报研究 · 企业财报", date: "2026-11-09", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/jcet-2026q3.html", bot: "财报研究" },
     { title: "采购人视角读财报：华虹宏力，特色工艺代工现在紧不紧", site: "财报研究 · 企业财报", date: "2026-11-06", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/huahong-2026q3.html", bot: "财报研究" },
-    { title: "采购人视角读财报：专栏首页", site: "财报研究 · 企业财报", date: "2026-11-10", href: "https://johnpeng-cn.github.io/supplychain-insights/columns/company-lens/", bot: "财报研究" },
     { title: "光纤：2028年最危险的是中国普通光纤", site: "反常识 · 产业链", date: "2026-11-08", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/fiber.html", bot: "反常识" },
     { title: "磷化铟：订单很热，但不是所有客户都能拿够货", site: "反常识 · 产业链", date: "2026-11-08", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/inp.html", bot: "反常识" },
-    { title: "产业链情报中心：栏目首页", site: "反常识 · 产业链", date: "2026-11-08", href: "https://johnpeng-cn.github.io/supplychain-insights/briefs/", bot: "反常识" },
-    { title: "供应链洞察站点首页", site: "知识与经验 · 学习知识", date: "2026-11-10", href: "https://johnpeng-cn.github.io/supplychain-insights/", bot: "知识与经验" },
-    { title: "个人经验库", site: "日记本 · 个人经验", date: "2026-11-10", href: "https://app.notion.com/p/4073ebe17af581218b0ee8bc994f996c?pvs=204", bot: "日记本" }
+    { title: "供应链洞察站点首页", site: "知识与经验 · 学习知识", date: "2026-11-12", href: "https://johnpeng-cn.github.io/supplychain-insights/", bot: "知识与经验" },
+    { title: "个人经验库", site: "日记本 · 个人经验", date: "2026-11-09", href: "https://app.notion.com/p/4073ebe17af581218b0ee8bc994f996c?pvs=204", bot: "日记本" }
   ],
   libraryFilters: ["全部", "财报研究", "反常识", "知识与经验", "日记本"],
 
